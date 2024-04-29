@@ -1,0 +1,72 @@
+#!/bin/bash
+
+wget -O /usr/bin/badvpn "https://github.com/izulx1/ssh/raw/badvpn" >/dev/null 2>&1
+chmod +x /usr/bin/badvpn > /dev/null 2>&1
+
+# Badvpn 7300
+cat> /etc/systemd/system/badvpn3.service <<-END
+[Unit]
+Description=UDP 7300
+Documentation=https://t.me/xdxl_store
+After=syslog.target network-online.target
+
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/usr/bin/badvpn --listen-addr 127.0.0.1:7300 --max-clients 500
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target
+
+END
+
+# Badvpn 7200
+cat> /etc/systemd/system/badvpn2.service <<-END
+[Unit]
+Description=UDP 7200
+Documentation=https://t.me/xdxl_store
+After=syslog.target network-online.target
+
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/usr/bin/badvpn --listen-addr 127.0.0.1:7200 --max-clients 500
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target
+
+END
+
+# Badvpn 7100
+cat> /etc/systemd/system/badvpn1.service <<-END
+[Unit]
+Description=UDP 7100
+Documentation=https://t.me/xdxl_store
+After=syslog.target network-online.target
+
+[Service]
+User=root
+NoNewPrivileges=true
+ExecStart=/usr/bin/badvpn --listen-addr 127.0.0.1:7100 --max-clients 500
+Restart=on-failure
+RestartPreventExitStatus=23
+LimitNPROC=10000
+LimitNOFILE=1000000
+
+[Install]
+WantedBy=multi-user.target
+
+END
+
+systemctl disable badvpn{1,2,3}
+systemctl stop badvpn{1,2,3} 
+systemctl enable badvpn{1,2,3}
+systemctl restart badvpn{1,2,3} 
