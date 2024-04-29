@@ -1,6 +1,6 @@
 #!/bin/bash
 
-wget -O /usr/bin/badvpn "https://github.com/izulx1/ssh/raw/badvpn" >/dev/null 2>&1
+wget -O /usr/bin/badvpn "https://github.com/izulx1/ssh/raw/files/badvpn" >/dev/null 2>&1
 chmod +x /usr/bin/badvpn > /dev/null 2>&1
 
 # Badvpn 7300
