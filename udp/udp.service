@@ -1,0 +1,15 @@
+[Unit]
+Description=SSH UDP Custom Service
+Documentation=https://t.me/xdxl_store
+After=network.target nss-lookup.target
+
+[Service]
+User=root
+Type=simple
+ExecStart=/etc/udp/udp-custom server -exclude 1,54,55,1000,65535
+WorkingDirectory=/etc/udp/
+Restart=always
+RestartSec=5s
+
+[Install]
+WantedBy=default.target
