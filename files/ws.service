@@ -1,12 +1,12 @@
 [Unit]
-Description=WebSocket ePRO
+Description=Websocket ePRO
 Documentation=https://github.com/zhets
 After=syslog.target network-online.target
 
 [Service]
 User=root
 NoNewPrivileges=true
-ExecStart=/usr/bin/ws -f /usr/bin/tun.conf
+ExecStart=/usr/bin/ws -f /usr/bin/ws.conf
 Restart=on-failure
 RestartPreventExitStatus=23
 LimitNPROC=10000
