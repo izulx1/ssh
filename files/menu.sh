@@ -1,57 +1,84 @@
 #!/bin/bash
-clear
 hariini=$(date +%d-%m-%Y)
 MYIP=$(wget -qO- ipinfo.io/ip)
 PUB=$(cat /etc/slowdns/server.pub)
 NS=$(cat /etc/xray/dns)
 host=$(cat /etc/xray/domain)
 #source '/usr/bin/menu'
+
+function add() {
+    useradd -e $(date -d "$masaaktif days" +"%Y-%m-%d") -s /bin/false -M $Login
+    exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
+    echo -e "$Pass\n$Pass\n" | passwd $Login &>/dev/null
+}
 function addssh() {
     clear
     read -p "Username : " Login
     read -p "Password : " Pass
     read -p "Expired (hari): " masaaktif
-    useradd -e $(date -d "$masaaktif days" +"%Y-%m-%d") -s /bin/false -M $Login
-    exp="$(chage -l $Login | grep "Account expires" | awk -F": " '{print $2}')"
-    echo -e "$Pass\n$Pass\n" | passwd $Login &>/dev/null
+    add
     clear
     echo -e "==== 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 ===="
     echo -e ""
     echo -e "Username: $Login"
     echo -e "Password: $Pass"
-    echo -e "Validity: $masaaktif Day"
+    echo -e "Expired: $masaaktif Day"
     echo -e ""
     echo -e "==== 𝐒𝐞𝐫𝐯𝐞𝐫 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 ==="
     echo -e ""
     echo -e "Host IP: $MYIP"
-    echo -e "Port OpenSSH : 443, 80, 22"
-    echo -e "Port DNS : 443, 53 ,22 "
-    echo -e "Port Dropbear : 443, 109"
-    echo -e "Port Dropbear WS : 443, 109"
-    echo -e "Port BadVPN : 7100-7300"
+    echo -e "Port OpenSSH : 22"
+    echo -e "Port DNS : 53"
+    echo -e "Port UDP : 1-65535"
+    echo -e "Port Dropbear : 143, 109"
+    echo -e "Port BadVPN : 7100, 7200, 7300"
     echo -e ""
     echo -e "==== 𝐖𝐞𝐛𝐬𝐨𝐜𝐤𝐞𝐭 𝐒𝐒𝐇 ===="
     echo -e ""
     echo -e "Websocket HOST : $host"
-    echo -e "Websocket SSH Port: 80"
+    echo -e "Websocket SSH Port: 80, 8080"
     echo -e "Websocket SSL Port: 443"
     echo -e ""
     echo -e "==== 𝐃𝐍𝐒𝐓𝐓 𝐒𝐒𝐇 ===="
     echo -e "Pub Key : $PUB"
     echo -e "Host Dns : $NS"
+    echo -e "====================="
     echo -e ""
-#    echo -e "join grup t.me/fightertunnell"
 }
-function delssh() {
+function trialssh() {
     clear
-    read -p "Username SSH to Delete : " Pengguna
-
-    if getent passwd $Pengguna >/dev/null 2>&1; then
-        userdel -f $Pengguna
-        echo -e "Username $Pengguna Telah Di Hapus"
-    else
-        echo -e "Failure: Username $Pengguna Tidak Ada"
-    fi
+    Login=trial-`</dev/urandom tr -dc 0-9 | head -c4`
+    Pass=1
+    read -p "Expired ( menit ) : " masaaktif
+    add
+    echo "userdel -f ${Login}" | at now +$masaaktif minutes &>/dev/null
+    clear
+    echo -e "==== 𝐀𝐜𝐜𝐨𝐮𝐧𝐭 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 ===="
+    echo -e ""
+    echo -e "Username: $Login"
+    echo -e "Password: $Pass"
+    echo -e "Expired: $masaaktif Menit"
+    echo -e ""
+    echo -e "==== 𝐒𝐞𝐫𝐯𝐞𝐫 𝐈𝐧𝐟𝐨𝐫𝐦𝐚𝐭𝐢𝐨𝐧 ==="
+    echo -e ""
+    echo -e "Host IP: $MYIP"
+    echo -e "Port OpenSSH : 22"
+    echo -e "Port DNS : 53"
+    echo -e "Port UDP : 1-65535"
+    echo -e "Port Dropbear : 143, 109"
+    echo -e "Port BadVPN : 7100, 7200, 7300"
+    echo -e ""
+    echo -e "==== 𝐖𝐞𝐛𝐬𝐨𝐜𝐤𝐞𝐭 𝐒𝐒𝐇 ===="
+    echo -e ""
+    echo -e "Websocket HOST : $host"
+    echo -e "Websocket SSH Port: 80, 8080"
+    echo -e "Websocket SSL Port: 443"
+    echo -e ""
+    echo -e "==== 𝐃𝐍𝐒𝐓𝐓 𝐒𝐒𝐇 ===="
+    echo -e "Pub Key : $PUB"
+    echo -e "Host Dns : $NS"
+    echo -e "====================="
+    echo -e ""
 }
 function member() {
     clear
@@ -75,6 +102,18 @@ function member() {
     echo "---------------------------------------------------"
     echo "Account number: $JUMLAH user"
     echo "---------------------------------------------------"
+}
+function delssh() {
+    member
+    echo -e ""
+    read -p "Username SSH to Delete : " Pengguna
+
+    if getent passwd $Pengguna >/dev/null 2>&1; then
+        userdel -f $Pengguna
+        echo -e "Username $Pengguna Telah Di Hapus"
+    else
+        echo -e "Failure: Username $Pengguna Tidak Ada"
+    fi
 }
 function check() {
     clear
@@ -149,7 +188,7 @@ function delxp() {
     echo "--------------------------------------"
     echo "Script are successfully run"
 }
-dnstt() {
+function dnstt() {
     clear
     read -rp "Input ur NS Domain : " -e NS_DOMAIN
     echo $NS_DOMAIN >/etc/xray/dns
@@ -177,38 +216,29 @@ function domain() {
     systemctl restart server
     systemctl restart client
     systemctl restart haproxy
-
 }
 function speedtest() {
     speedtest-cli --share
-
 }
 
 clear
 neofetch
 echo ""
-echo -e "\033[31m1\033[0m : Edit Banner SSH Message"
-#echo ""
+echo -e "\033[31m1\033[0m : Membuat Akun SSH Trial"
 echo -e "\033[31m2\033[0m : Membuat Akun SSH"
-#echo ""
 echo -e "\033[31m3\033[0m : Menghapus Akun SSH"
-#echo ""
 echo -e "\033[31m4\033[0m : Menampikan Akun Login SSH"
-#echo ""
 echo -e "\033[31m5\033[0m : Menampilkan Semua Akun SSH"
-#echo ""
 echo -e "\033[31m6\033[0m : Menghapus Semua Akun Expired SSH"
-#echo ""
 echo -e "\033[31m7\033[0m : Cek Kecepatan Server"
-#echo ""
 echo -e "\033[31m8\033[0m : Mengganti Domain"
-#echo ""
 echo -e "\033[31m9\033[0m : Mengganti NS SlowDNS"
+echo -e "\033[31m10\033[0m : Edit Banner SSH Message"
 echo ""
-read -p " Chose Options [ 1 - 9 or x ] : " opt
+read -p " Chose Options [ 1 - 10 or x ] : " opt
 case $opt in
 x) exit ;;
-1) nano /etc/banner.com ; systemctl restart dropbear ; menu ;;
+1) trialssh ;;
 2) addssh ;;
 3) delssh ;;
 4) member ;;
@@ -217,5 +247,10 @@ x) exit ;;
 7) speedtest ;;
 8) domain ;;
 9) dnstt ;;
+10) 
+nano /etc/banner.com
+systemctl restart dropbear 
+menu ;;
 *) menu ;;
 esac
+
