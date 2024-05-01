@@ -36,10 +36,10 @@ lane
 echo -e " Username : $user "
 echo -e " Password : $pass "
 lane
-echo -e " Host : $domain "
-echo -e " Host IP : $IP "
-echo -e " Dropbear : 143, 109"
-echo -e " OpenSSH : 22"
+echo -e " Host     : $domain "
+echo -e " Host IP   : $IP "
+echo -e " Dropbear  : 143, 109"
+echo -e " OpenSSH   : 22"
 echo -e " Port TLS  : 443"
 echo -e " Port NTLS : 80"
 echo -e " Port DNS  : 53"
@@ -52,7 +52,6 @@ lane
 echo -e " Created On : $hariini "
 echo -e " Expired On : $exp "
 lane
-exit 0
 }
 function dnstt() {
 clear
@@ -64,7 +63,6 @@ systemctl daemon-reload
 systemctl restart server
 systemctl restart client
 echo "Change NS DOMAIN (SLOWDNS) Successfully"
-exit 0
 }
 function domain() {
 clear
@@ -111,7 +109,6 @@ echo -e "${y}========================================${NC}"
 echo -e " Total Account SSH ${JUMLAH} User"
 echo -e "${y}========================================${NC}"
 echo -e ""
-exit 0
 }
 
 function run() {
@@ -124,57 +121,56 @@ dns_ser=$(systemctl status server | grep Active | awk '{print $3}' | sed 's/(//g
 dns_clint=$(systemctl status client | grep Active | awk '{print $3}' | sed 's/(//g' | sed 's/)//g' )
 
 if [[ $drbear == "running" ]]; then
-sts_dropbear="[${g}ON{NC}]"
+sts_dropbear="[${g}ON${NC}]"
 else
 sts_dropbear="[${r}OFF${NC}]"
 fi
 
 if [[ $ws_epro == "running" ]]; then
-sts_ws="[${g}ON{NC}]"
+sts_ws="[${g}ON${NC}]"
 else
 sts_ws="[${r}OFF${NC}]"
 fi
 
 if [[ $nginx == "running" ]]; then
-sts_nginx="[${g}ON{NC}]"
+sts_nginx="[${g}ON${NC}]"
 else
 sts_nginx="[${r}OFF${NC}]"
 fi
 
 if [[ $hap == "running" ]]; then
-sts_hap="[${g}ON{NC}]"
+sts_hap="[${g}ON${NC}]"
 else
 sts_hap="[${r}OFF${NC}]"
 fi
 
 if [[ $udp == "running" ]]; then
-sts_udp="[${g}ON{NC}]"
+sts_udp="[${g}ON${NC}]"
 else
 sts_udp="[${r}OFF${NC}]"
 fi
 
 if [[ $dns_ser == "running" ]]; then
-sts_ser="[${g}ON{NC}]"
+sts_ser="[${g}ON${NC}]"
 else
 sts_ser="[${r}OFF${NC}]"
 fi
 
 if [[ $dns_clint == "running" ]]; then
-sts_clint="[${g}ON{NC}]"
+sts_clint="[${g}ON${NC}]"
 else
 sts_clint="[${r}OFF${NC}]"
 fi
 
 clear
 neofetch
-echo -e " Dropbear : ${sts_dropbear}"
-echo -e " Ws ePRO : ${sts_ws}"
-echo -e " Nginx : ${sts_nginx}"
-echo -e " Haproxy : ${sts_hap}"
-echo -e " Udp HC : ${sts_udp}"
+echo -e " Dropbear   : ${sts_dropbear}"
+echo -e " Ws ePRO    : ${sts_ws}"
+echo -e " Nginx      : ${sts_nginx}"
+echo -e " Haproxy    : ${sts_hap}"
+echo -e " Udp HC     : ${sts_udp}"
 echo -e " DNS Client : ${sts_clint}"
 echo -e " DNS Server : ${sts_ser}"
-exit 0
 }
 function checkssh() {
 clear
@@ -200,7 +196,6 @@ do
                     echo "  $PID - $USER - $IP";
                     fi
 done
-echo -e "${y}===============================================${NC}"
 echo " "
 echo -e "${y}====================================================${NC}"
 echo "    User Login SSH OpenSSH"
@@ -219,12 +214,11 @@ do
                     echo "  $PID - $USER - $IP";
         fi
 done
-echo -e "${y}===============================================${NC}"
 echo " "
 echo -e "${y}====================================================${NC}"
 echo "    User Login SSH UDP"
 echo -e "${y}====================================================${NC}"
-echo "   Login  |  Username  |  IP Address";
+echo "  Login  |  Username  |  IP Address";
 rm -r /var/log/udp.log
 journalctl -u udp -n 100 > /var/log/udp.log
 cat /var/log/udp.log | grep -i "Client connected" > /tmp/login-udp.txt;
@@ -243,33 +237,31 @@ else
                     echo "  $TIME - $USER - $IP";
 fi
 done
-echo -e "${y}===============================================${NC}"
-exit 0
+echo -e "${y}====================================================${NC}"
 }
 function restart() {
 systemctl restart haproxy nginx ws dropbear client server cron udp
 sleep 2
 echo -e " Restart All Service Done"
 sleep 1
-exit 0
 }
 
 clear
 neofetch
 echo ""
-echo -e "  ${r}1${NC} : Add SSH Account"
-echo -e "  ${r}2${NC} : Delete SSH Account"
-echo -e "  ${r}3${NC} : Member SSH Account"
-echo -e "  ${r}4${NC} : Check User Login SSH"
-echo -e "  ${r}5${NC} : Delete User SSH Expired"
-echo -e "  ${r}6${NC} : Speedtest VPS"
-echo -e "  ${r}7${NC} : Change Domain"
-echo -e "  ${r}8${NC} : Change NS Domain"
-echo -e "  ${r}9${NC} : Edit Banner SSH Message"
+echo -e " ${r}1${NC} : Add SSH Account"
+echo -e " ${r}2${NC} : Delete SSH Account"
+echo -e " ${r}3${NC} : Member SSH Account"
+echo -e " ${r}4${NC} : Check User Login SSH"
+echo -e " ${r}5${NC} : Delete User SSH Expired"
+echo -e " ${r}6${NC} : Speedtest VPS"
+echo -e " ${r}7${NC} : Change Domain"
+echo -e " ${r}8${NC} : Change NS Domain"
+echo -e " ${r}9${NC} : Edit Banner SSH Message"
 echo -e " ${r}10${NC} : Check Service Status"
 echo -e " ${r}11${NC} : Check CPU/Ram Via Gotop"
 echo -e " ${r}12${NC} : Restart All Service"
-echo -e " ${r}x.${NC} : Exit"
+echo -e " ${r}x${NC} : Exit"
 echo ""
 read -p "  Chose Options [ 1 - 12 or x ] : " opt
 case $opt in
@@ -279,7 +271,7 @@ x) exit ;;
 3) memssh ;;
 4) checkssh ;;
 5) xp ;;
-6) speedtest-cli --share; exit 0 ;;
+6) speedtest-cli --share ;;
 7) domain ;;
 8) dnstt ;;
 9) nano /etc/banner.com; systemctl restart dropbear; menu ;;
