@@ -101,66 +101,10 @@ neofetch
 echo "Silahkan Ketik menu Untuk Melihat daftar Perintah"
 END
 cd
-cat> /usr/bin/clearlog <<-END
-#!/bin/bash
-systemctl restart udp
-data=(`find /var/log/ -name *.log`);
-for log in "${data[@]}"
-do
-echo "$log clear"
-echo > $log
-done
-data=(`find /var/log/ -name *.err`);
-for log in "${data[@]}"
-do
-echo "$log clear"
-echo > $log
-done
-data=(`find /var/log/ -name mail.*`);
-for log in "${data[@]}"
-do
-echo "$log clear"
-echo > $log
-done
-echo > /var/log/syslog
-echo > /var/log/btmp
-echo > /var/log/messages
-echo > /var/log/debug
-echo 1 > /proc/sys/vm/drop_caches
-END
-
-cat> /usr/bin/xp <<-END
-##------ Auto Remove SSH
-hariini=$(date +%d-%m-%Y)
-cat /etc/shadow | cut -d: -f1,8 | sed /:$/d >/tmp/expirelist.txt
-totalaccounts=$(cat /tmp/expirelist.txt | wc -l)
-for ((i = 1; i <= $totalaccounts; i++)); do
-    tuserval=$(head -n $i /tmp/expirelist.txt | tail -n 1)
-    username=$(echo $tuserval | cut -f1 -d:)
-    userexp=$(echo $tuserval | cut -f2 -d:)
-    userexpireinseconds=$(($userexp * 86400))
-    tglexp=$(date -d @$userexpireinseconds)
-    tgl=$(echo $tglexp | awk -F" " '{print $3}')
-    while [ ${#tgl} -lt 2 ]; do
-        tgl="0"$tgl
-    done
-    while [ ${#username} -lt 15 ]; do
-        username=$username" "
-    done
-    bulantahun=$(echo $tglexp | awk -F" " '{print $2,$6}')
-    todaystime=$(date +%s)
-    if [ $userexpireinseconds -ge $todaystime ]; then
-        :
-    else
-        userdel --force $username
-        systemctl reload ssh
-        systemctl restart ws
-    fi
-done
-echo -e " Successfully Delete User Expired"
-END
 
 wget -q -O /usr/bin/menu "${GITHUB_CMD}menu.sh"
+wget -q -O /usr/bin/clearlog "${GITHUB_CMD}clearlog"
+wget -q -O /usr/bin/xp "${GITHUB_CMD}xp.sh"
 wget -q -O /etc/squid/squid.conf "${GITHUB_CMD}squid.conf"
 wget -q -O /etc/default/dropbear "${GITHUB_CMD}dropbear"
 wget -q -O /etc/ssh/sshd_config "${GITHUB_CMD}sshd"
